@@ -1,0 +1,48 @@
+# Maven
+target/
+pom.xml.tag
+pom.releaseBackup
+pom.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Java / IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.factorypath
+*.class
+*.log
+*.jar
+*.war
+!**/src/main/**/package-info.java
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+*.env
+application-local.yml
+application-*.local.yml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs and temp
+logs/
+tmp/
+temp/
+*.tmp
+*.swp
+*~
+
+# Generated export artifacts (may contain real Slack DM data)
+exports/

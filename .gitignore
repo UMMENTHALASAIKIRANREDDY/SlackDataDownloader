@@ -1,0 +1,59 @@
+# ===== Secrets / environment =====
+.env
+.env.local
+.env.*.local
+*.env
+!**/.env.example
+application-local.yml
+application-*.local.yml
+
+# ===== Backend (Maven / Java) =====
+target/
+*.class
+*.log
+*.jar
+*.war
+pom.xml.tag
+pom.releaseBackup
+pom.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Generated export artifacts (may contain real Slack DM data)
+backend/exports/
+exports/
+
+# ===== Frontend (Node / Vite) =====
+node_modules/
+dist/
+build/
+.vite/
+.cache/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ===== IDE / OS =====
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.factorypath
+.vscode/
+.DS_Store
+Thumbs.db
+
+# ===== Logs / temp =====
+logs/
+tmp/
+temp/
+*.tmp
+*.swp
+*~

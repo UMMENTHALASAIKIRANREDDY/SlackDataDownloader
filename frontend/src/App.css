@@ -1,0 +1,518 @@
+/* Full-screen layout — Slack-inspired design */
+
+:root {
+  --slack-purple: #4A154B;
+  --slack-purple-dark: #3d0e3e;
+  --slack-purple-light: #611f69;
+  --slack-dm: #1264a3;
+  --slack-dm-light: #1d9bd1;
+  --slack-private: #0b4c8c;
+  --slack-private-light: #1d9bd1;
+  --slack-green: #2eb67d;
+  --slack-yellow: #ecb22e;
+  --slack-red: #e01e5a;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app-header {
+  flex-shrink: 0;
+  padding: 24px 40px 24px;
+  background: linear-gradient(135deg, var(--slack-purple) 0%, var(--slack-purple-dark) 100%);
+  border-bottom: none;
+  box-shadow: 0 4px 12px rgba(74, 21, 75, 0.25);
+}
+
+.app-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.app-logo-wrap {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  background: #fff;
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.app-brand .app-logo {
+  display: block;
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+
+.app-brand-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+
+.app-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.app-tagline {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.app-content {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  background: #f8f6f8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 24px 40px;
+}
+
+.app-content-inner {
+  width: 100%;
+  max-width: 960px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.download-guard-banner {
+  padding: 14px 32px;
+  background: linear-gradient(90deg, #fef3c7 0%, #fde68a 100%);
+  border-bottom: 1px solid #f59e0b;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #92400e;
+  text-align: center;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  background: transparent;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+}
+
+.tab .tab-icon {
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+.tab:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.tab.tab-active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.tab.tab-dm.tab-active {
+  background: rgba(29, 155, 209, 0.4);
+}
+
+.tab.tab-private.tab-active {
+  background: rgba(29, 155, 209, 0.4);
+}
+
+.export-mode-section {
+  margin-bottom: 20px;
+}
+
+.field-label {
+  margin: 0 0 10px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.9375rem;
+  color: #374151;
+}
+
+.radio-option input[type="radio"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--slack-purple);
+  cursor: pointer;
+}
+
+.radio-option:has(input:disabled) {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.date-range-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+/* Step indicator */
+.step-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #fff 0%, #f8f6f8 100%);
+  border-radius: 12px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--slack-purple);
+  box-shadow: 0 2px 8px rgba(74, 21, 75, 0.06);
+  border: 1px solid rgba(74, 21, 75, 0.08);
+  width: 100%;
+}
+
+.step-indicator + .card {
+  margin-top: 0;
+}
+
+.step-indicator .step-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #d1d5db;
+  transition: background 0.2s;
+}
+
+.step-indicator .step-dot.active {
+  background: var(--slack-purple);
+  box-shadow: 0 0 0 2px rgba(74, 21, 75, 0.25);
+}
+
+.step-indicator .step-dot.done {
+  background: var(--slack-green);
+}
+
+/* Card container for each step */
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(74, 21, 75, 0.08), 0 8px 24px rgba(0, 0, 0, 0.06);
+  padding: 32px 40px;
+  margin-bottom: 24px;
+  width: 100%;
+  border: 1px solid rgba(74, 21, 75, 0.06);
+}
+
+.flow-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.app-description {
+  margin: 0;
+  color: #4b5563;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Export type selection (Page 1) */
+.export-type-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.export-type-btn {
+  padding: 20px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  background: #f8f9fc;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  color: #1a1a2e;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.export-type-btn:hover {
+  background: #f8f6f8;
+  border-color: var(--slack-purple-light);
+  box-shadow: 0 4px 12px rgba(74, 21, 75, 0.12);
+}
+
+.export-type-btn.primary {
+  background: linear-gradient(135deg, var(--slack-purple-light) 0%, var(--slack-purple) 100%);
+  border-color: var(--slack-purple);
+  color: #fff;
+}
+
+.export-type-btn.primary:hover {
+  background: linear-gradient(135deg, var(--slack-purple) 0%, var(--slack-purple-dark) 100%);
+  border-color: var(--slack-purple-dark);
+  box-shadow: 0 4px 16px rgba(74, 21, 75, 0.3);
+}
+
+/* Form fields */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.field input,
+.field textarea {
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: #9ca3af;
+}
+
+.field input:disabled,
+.field textarea:disabled {
+  background: #f3f4f6;
+  cursor: not-allowed;
+  color: #6b7280;
+}
+
+/* Inline fields for better use of horizontal space */
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+/* Entry blocks (repeating Channel ID / User ID etc.) */
+.entry-block {
+  padding: 24px;
+  background: linear-gradient(135deg, #fdfcfe 0%, #f8f6f8 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(74, 21, 75, 0.1);
+}
+
+.entry-block + .entry-block {
+  margin-top: 20px;
+}
+
+/* Entry grid for multiple blocks — uses horizontal space on wide screens */
+.entry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Responsive body */
+@media (min-width: 768px) {
+  .app-content {
+    padding: 32px 40px 48px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .app-content-inner {
+    max-width: 1000px;
+  }
+}
+
+.entry-title {
+  margin: 0 0 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Messages */
+.message {
+  padding: 14px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.message-error {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.message-success {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+/* Buttons */
+.button-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.submit-btn {
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, var(--slack-purple-light) 0%, var(--slack-purple) 100%);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--slack-purple) 0%, var(--slack-purple-dark) 100%);
+  box-shadow: 0 4px 16px rgba(74, 21, 75, 0.35);
+}
+
+.submit-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.secondary-btn {
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: #fff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.secondary-btn:hover:not(:disabled) {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.secondary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Step hint (optional footer) */
+.step-hint {
+  margin-top: 20px;
+  font-size: 0.8125rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+/* Download progress */
+.download-progress {
+  margin: 16px 0;
+}
+
+.download-progress-bar {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.download-progress-bar-indeterminate .download-progress-fill {
+  width: 30% !important;
+  animation: download-progress-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes download-progress-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(433%); }
+}
+
+.download-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--slack-purple-light), var(--slack-purple));
+  border-radius: 8px;
+  transition: width 0.2s ease-out;
+}
+
+.download-progress-text {
+  margin: 8px 0 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+}

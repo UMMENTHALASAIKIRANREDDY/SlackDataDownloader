@@ -1,0 +1,52 @@
+
+spring:
+  application:
+    name: slack-dm-export
+
+server:
+  port: ${SERVER_PORT:8081}
+
+# Input in backend config: admin/user tokens and optional channel ID lists.
+# Example: DM channel id D01XXXXXXXX, MPIM channel id C0AXXXXXXXX.
+slack:
+  tokens:
+    # Tokens are read from the environment (.env file or real env vars). Never hardcode them here.
+    admin: ${SLACK_ADMIN_TOKEN:}
+    user: ${SLACK_USER_TOKEN:}
+    # Optional: comma-separated additional user tokens for multi-token fetch (deduplicates DMs/private channels)
+    users: ${SLACK_USER_TOKENS:}
+  export:
+    # Optional: comma-separated DM channel IDs (one-on-one DMs)
+    dm-channel-ids: ${SLACK_DM_CHANNEL_IDS:}
+    # Optional: comma-separated MPIM channel IDs (group DMs)
+    mpim-channel-ids: ${SLACK_MPIM_CHANNEL_IDS:}
+  api:
+    base-url: https://slack.com/api
+    # Connect timeout (ms) for Slack API; reduces Netty flush/DNS errors when network is slow or client disconnects
+    connect-timeout-ms: ${SLACK_CONNECT_TIMEOUT_MS:30000}
+  rate-limit:
+    retry-after-header: Retry-After
+    # High retries for enrichment (reactions/files) so we never skip a message; general API uses same value
+    max-retries: ${SLACK_RATE_LIMIT_MAX_RETRIES:100}
+    initial-backoff-ms: 1000
+    # Delay (ms) between each message's reactions.get/files.info to reduce rate limit hits. Default 800.
+    enrichment-delay-ms: ${SLACK_ENRICHMENT_DELAY_MS:800}
+
+# Save latest "Export All DMs" ZIP and async job ZIPs (exports/{jobId}.zip)
+export:
+  save-dir: ${EXPORT_SAVE_DIR:exports}
+  # Delay (ms) between starting each DM channel to avoid Slack 429 rate limits. Default 1200. Set to 0 to disable.
+  slack-channel-delay-ms: ${EXPORT_SLACK_CHANNEL_DELAY_MS:1200}
+  # Auto-delete async job ZIPs older than this many hours (default 24)
+  cleanup-max-age-hours: ${EXPORT_CLEANUP_MAX_AGE_HOURS:24}
+  # Cron for cleanup job (default: every hour)
+  cleanup-cron: ${EXPORT_CLEANUP_CRON:0 0 * * * *}
+
+logging:
+  level:
+    com.cloudfuze.slackexport: DEBUG
+    com.cloudfuze.slackexport.service.ExportAllDmsDualTokenService: INFO
+    org.springframework.web: INFO
+    # Reduce Netty noise (e.g. flush/connection reset when client disconnects or DNS fails)
+    io.netty: WARN
+    reactor.netty: WARN
