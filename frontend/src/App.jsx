@@ -3,11 +3,11 @@ import axios from 'axios'
 import { DmIcon, DmAllIcon, PrivateChannelIcon, PrivateChannelAllIcon } from './Icons'
 import './App.css'
 
-// When running on localhost, always call backend at 8081 (works for both Vite dev server and production build).
-const isLocalhost = typeof window !== 'undefined' &&
-  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-if (isLocalhost) {
-  axios.defaults.baseURL = 'http://localhost:8081'
+// API base URL is env-driven (see .env / .env.example).
+// Empty (default in production) => relative /api calls served same-origin via reverse proxy.
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ''
+if (API_BASE_URL) {
+  axios.defaults.baseURL = API_BASE_URL
 }
 
 const API_URL = '/api/export/slack-dm-mpim'

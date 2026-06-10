@@ -21,14 +21,14 @@ slack:
     # Optional: comma-separated MPIM channel IDs (group DMs)
     mpim-channel-ids: ${SLACK_MPIM_CHANNEL_IDS:}
   api:
-    base-url: https://slack.com/api
+    base-url: ${SLACK_API_BASE_URL:https://slack.com/api}
     # Connect timeout (ms) for Slack API; reduces Netty flush/DNS errors when network is slow or client disconnects
     connect-timeout-ms: ${SLACK_CONNECT_TIMEOUT_MS:30000}
   rate-limit:
     retry-after-header: Retry-After
     # High retries for enrichment (reactions/files) so we never skip a message; general API uses same value
     max-retries: ${SLACK_RATE_LIMIT_MAX_RETRIES:100}
-    initial-backoff-ms: 1000
+    initial-backoff-ms: ${SLACK_RATE_LIMIT_INITIAL_BACKOFF_MS:1000}
     # Delay (ms) between each message's reactions.get/files.info to reduce rate limit hits. Default 800.
     enrichment-delay-ms: ${SLACK_ENRICHMENT_DELAY_MS:800}
 
@@ -44,7 +44,7 @@ export:
 
 logging:
   level:
-    com.cloudfuze.slackexport: DEBUG
+    com.cloudfuze.slackexport: ${LOG_LEVEL_APP:DEBUG}
     com.cloudfuze.slackexport.service.ExportAllDmsDualTokenService: INFO
     org.springframework.web: INFO
     # Reduce Netty noise (e.g. flush/connection reset when client disconnects or DNS fails)
