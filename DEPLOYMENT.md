@@ -37,8 +37,8 @@ automatic deploys from GitHub Actions on every push to `main`.
 | `deploy/init-letsencrypt.sh` | One-time TLS certificate bootstrap |
 | `deploy/deploy.sh` | Pull + rebuild + restart (used by CI and manually) |
 | `.github/workflows/cicd.yml` | Build/validate, then SSH-deploy to the server |
-| `.env` (root) | `DOMAIN`, `LETSENCRYPT_EMAIL` (compose/TLS) — **not committed** |
-| `backend/.env` | Slack tokens + backend config — **not committed** |
+| `.env` (root, single) | **All** config: Slack tokens, ports, `DOMAIN`, `LETSENCRYPT_EMAIL`, etc. — **not committed** |
+| `.env.example` | Template for the above — committed |
 
 ---
 
@@ -54,7 +54,7 @@ automatic deploys from GitHub Actions on every push to `main`.
      ```bash
      sudo ufw allow 22 && sudo ufw allow 80 && sudo ufw allow 443
      ```
-4. Your **Slack tokens** (the ones currently in your local `backend/.env`).
+4. Your **Slack tokens** (the ones from your local `.env`).
 
 ---
 
@@ -102,24 +102,19 @@ cd /opt/slackdownloader
 ```
 > If the repo is **private**, see [Appendix: private repo access](#appendix-private-repo-access).
 
-### A4. Create the environment files (these hold secrets and are gitignored)
-
-**Backend secrets/config:**
-```bash
-cp backend/.env.example backend/.env
-nano backend/.env      # paste your real SLACK_ADMIN_TOKEN / SLACK_USER_TOKEN, save
-```
-
-**TLS / domain config (root `.env`):**
+### A4. Create the single environment file (holds secrets, gitignored)
 ```bash
 cp .env.example .env
-nano .env              # set DOMAIN and LETSENCRYPT_EMAIL, save
+nano .env
 ```
-Example root `.env`:
+Fill in at least:
 ```
+SLACK_ADMIN_TOKEN=xoxp-...your real token...
+SLACK_USER_TOKEN=xoxp-...your real token...
 DOMAIN=slackexport.yourcompany.com
 LETSENCRYPT_EMAIL=you@yourcompany.com
 ```
+This one file is read by the backend, the frontend build, and Docker Compose.
 
 ### A5. Build the images
 ```bash
@@ -219,9 +214,9 @@ docker compose up -d                 # start
 docker compose exec backend ls -la /app/exports
 ```
 
-**Change backend config (tokens, timeouts, etc.):**
+**Change config (tokens, timeouts, etc.):**
 ```bash
-nano backend/.env
+nano .env
 docker compose up -d backend         # recreate backend with new env
 ```
 
@@ -236,7 +231,7 @@ certs renew within 30 days of expiry. No action needed.
 |---|---|
 | `init-letsencrypt.sh` fails on the challenge | DNS A record not pointing at server yet, or ports 80/443 blocked. Check `dig +short DOMAIN` and your firewall/security group. |
 | `502 Bad Gateway` from nginx | Backend not up yet or crashed. `docker compose logs backend`. |
-| Backend logs "token is required" | `backend/.env` missing/empty tokens. Edit it, then `docker compose up -d backend`. |
+| Backend logs "token is required" | `.env` missing/empty tokens. Edit it, then `docker compose up -d backend`. |
 | `port is already allocated` (80/443) | Something else (Apache/old nginx) is using them. `sudo lsof -i :80` and stop it. |
 | GitHub Action SSH step fails | Check `SSH_HOST/USER/PORT` and that `SSH_PRIVATE_KEY` is the full private key. Test locally: `ssh -i deploy_key -p PORT user@host`. |
 | Action deploy step: `git pull` permission denied | Private repo without server access — see Appendix. |
@@ -271,8 +266,7 @@ git pull   # verify it works
 ## ⚠️ Security reminders
 
 - The Slack tokens were previously committed to other repos and should be **rotated**
-  in Slack (OAuth & Permissions → reinstall), then updated in `backend/.env`.
-- Never commit `.env` or `backend/.env` — both are gitignored. Only the `.env.example`
-  templates are in git.
+  in Slack (OAuth & Permissions → reinstall), then updated in `.env`.
+- Never commit `.env` — it's gitignored. Only `.env.example` is in git.
 - The `web` server only exposes 80/443; the backend's 8081 stays on the internal
   Docker network and is never reachable directly from the internet.

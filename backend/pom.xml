@@ -61,6 +61,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- Run from the repo root so spring-dotenv finds the single root .env.
+                         (Docker passes env via compose env_file, so this only affects local `mvn spring-boot:run`.) -->
+                    <workingDirectory>${project.basedir}/..</workingDirectory>
+                </configuration>
             </plugin>
         </plugins>
     </build>
