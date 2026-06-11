@@ -1,0 +1,9 @@
+target/
+exports/
+.env
+*.log
+.git
+.gitignore
+README.md
+docs/
+test-export.ps1

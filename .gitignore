@@ -26,6 +26,9 @@ buildNumber.properties
 backend/exports/
 exports/
 
+# TLS certificates / certbot state (generated on the server)
+deploy/certbot/
+
 # ===== Frontend (Node / Vite) =====
 node_modules/
 dist/
