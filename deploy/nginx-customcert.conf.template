@@ -1,0 +1,39 @@
+# Bring-your-own-certificate nginx config (no Let's Encrypt).
+# Mount your cert at /etc/nginx/ssl/tls.crt (+ chain) and key at /etc/nginx/ssl/tls.key.
+# ${DOMAIN} is substituted by the nginx image entrypoint (envsubst) at container start.
+# $host, $uri, $scheme, etc. are nginx runtime vars and are left untouched.
+
+# ---- HTTP :80 → redirect to HTTPS ----
+server {
+    listen 80;
+    server_name ${DOMAIN};
+    location / { return 301 https://$host$request_uri; }
+}
+
+# ---- HTTPS :443 — SPA + /api reverse proxy ----
+server {
+    listen 443 ssl;
+    server_name ${DOMAIN};
+
+    ssl_certificate     /etc/nginx/ssl/tls.crt;
+    ssl_certificate_key /etc/nginx/ssl/tls.key;
+
+    root  /usr/share/nginx/html;
+    index index.html;
+
+    location /api/ {
+        proxy_pass http://backend:8081;
+        proxy_set_header Host              $host;
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 600s;
+        proxy_send_timeout 600s;
+        proxy_buffering    off;
+        client_max_body_size 50m;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
