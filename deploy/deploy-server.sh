@@ -13,7 +13,11 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 [ -f .env ] || { echo "ERROR: .env missing. Run: cp .env.example .env  then edit it."; exit 1; }
-set -a; . ./.env; set +a
+# Read only the values this script needs. Do NOT source .env: values like the cron
+# expression contain spaces/asterisks and would be executed by the shell.
+get_env() { grep -E "^$1=" .env | head -1 | cut -d= -f2-; }
+DOMAIN="$(get_env DOMAIN)"
+VITE_API_BASE_URL="$(get_env VITE_API_BASE_URL)"
 : "${DOMAIN:?ERROR: set DOMAIN in .env}"
 
 if [ ! -f deploy/ssl/tls.crt ] || [ ! -f deploy/ssl/tls.key ]; then
